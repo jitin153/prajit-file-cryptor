@@ -43,8 +43,19 @@ public class PrajitFileCrypter {
 					folderToBeCreated = scanner.nextLine();
 				}
 			} else {
-				System.out.println("Please enter output folder path where encrypted/decrypted files to be stored...");
-				outputFolderPath = scanner.nextLine();
+				System.out.println("Do you want to place encrypted/decrypted files into the same folder? Y or N");
+				String isIntoSameFolder = scanner.nextLine();
+				if (isIntoSameFolder.equalsIgnoreCase("Y")) {
+					outputFolderPath = inputFolderPath;
+				} else {
+					System.out
+							.println("Please enter output folder path where encrypted/decrypted files to be stored...");
+					outputFolderPath = scanner.nextLine();
+					File outputFolder = new File(outputFolderPath);
+					if (!outputFolder.exists()) {
+						outputFolder.mkdir();
+					}
+				}
 			}
 			System.out.println("Operation: Please type E for encryption & D for decryption...");
 			operation = scanner.nextLine();
@@ -80,6 +91,7 @@ public class PrajitFileCrypter {
 			System.out.println(e);
 		}
 	}
+
 	/*
 	 * Recursive method to list all folder and sub folders
 	 */
@@ -153,22 +165,19 @@ public class PrajitFileCrypter {
 				FileCryptUtil.encryptFile(key, fileEntry.getPath(),
 						outputFolderPath + "/" + fileNameOnly + "_" + extension + ".enc");
 				filesAffected.incrementAndGet();
-			} else if (operation.equalsIgnoreCase("D")) {
-				if (extension.equalsIgnoreCase("enc")) {
-					fileNameOnly = fileNameOnly.substring(0, fileNameOnly.lastIndexOf('_'));
-					String actualExtension = fileName.substring(fileName.lastIndexOf('_') + 1,
-							fileName.lastIndexOf('.'));
-					FileCryptUtil.decryptFile(key, fileEntry.getPath(),
-							outputFolderPath + "/" + fileNameOnly + "." + actualExtension);
-					filesAffected.incrementAndGet();
-				}
+			} else if (operation.equalsIgnoreCase("D") && extension.equalsIgnoreCase("enc")) {
+				fileNameOnly = fileNameOnly.substring(0, fileNameOnly.lastIndexOf('_'));
+				String actualExtension = fileName.substring(fileName.lastIndexOf('_') + 1, fileName.lastIndexOf('.'));
+				FileCryptUtil.decryptFile(key, fileEntry.getPath(),
+						outputFolderPath + "/" + fileNameOnly + "." + actualExtension);
+				filesAffected.incrementAndGet();
 			}
 		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException
 				| BadPaddingException | IOException e) {
 			System.out.println(e);
 		}
 	}
-	
+
 	/*
 	 * Utility class to do the actual encryption/decryption.
 	 */
