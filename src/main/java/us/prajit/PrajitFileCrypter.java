@@ -150,7 +150,6 @@ public class PrajitFileCrypter {
 		@Override
 		public void run() {
 			if (!folders.isEmpty()) {
-
 				String folder = "";
 				try {
 					folder = folders.take();
@@ -180,7 +179,6 @@ public class PrajitFileCrypter {
 
 					if (fileEntry.isFile()) {
 						doCrypto(fileEntry, operation, key, outputDir);
-
 					}
 				}
 				if ((!folderToBeCreated.isBlank() || !rootFolderPath.isBlank()) && newFolder.exists()
@@ -188,14 +186,8 @@ public class PrajitFileCrypter {
 					newFolder.delete();
 				}
 			}
-
 			latch.countDown();
 		}
-
-		/*
-		 * private static boolean createFolder(String path) { File newFolder = new
-		 * File(path); if(!newFolder.exists()) { newFolder.mkdir(); } }
-		 */
 	}
 
 	private static void doCrypto(File fileEntry, String operation, String key, String outputFolderPath) {
